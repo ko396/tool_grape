@@ -3,20 +3,22 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="robots" content="noindex">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>ぶどう計算機</title>
-  <script src="/assets/js/jquery-3.7.0.min.js"></script>
-  <script src="/assets/js/garlic.min.js"></script>
-  <script src="/assets/js/decimal.min.js"></script>
+  <script src="assets/js/jquery-3.7.0.min.js"></script>
+  <script src="assets/js/garlic.min.js"></script>
+  <script src="assets/js/decimal.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-  <link href="/assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
 
   <script>
     $(function() {
       const $all = $('.js-calc-all');
 
+      //合計計算
       const GetAll = function() {
         let tmp = 0;
         $('.js-calc-gokei').each(function() {
@@ -26,51 +28,54 @@
         })
         $all.html(tmp);
       }
-      const SetLs = function() {
+
+      //各項計算
+      const SetValue = function(elm) {
+        console.log(1);
+        const $wrap = elm.closest('.js-calc-wrap');
+        const $omosa_grape = $wrap.find('.js-calc-input2');
+        const $omosa_box = $wrap.find('.js-calc-input3');
+        const $omosa_only = $wrap.find('.js-calc-input4');
+        const $tanka = $wrap.find('.js-calc-input5');
+        const $gokei = $wrap.find('.js-calc-gokei');
+
+        //ぶどうだけの重さ
+        let omosa_grape_val = 0;
+        if ($omosa_grape.val()) {
+          omosa_grape_val = new Decimal($omosa_grape.val());
+        } else {
+          omosa_grape_val = new Decimal(0);
+        }
+        let omosa_box_val = 0;
+        if ($omosa_box.val()) {
+          omosa_box_val = new Decimal($omosa_box.val());
+        } else {
+          omosa_box_val = new Decimal(0);
+        }
+
+        let omosa_only = omosa_grape_val.sub(omosa_box_val).toNumber();
+        $omosa_only.html(omosa_only);
+
+        //金額
+        let gokei = omosa_only * $tanka.val();
+        gokei = Math.floor(gokei);
+        $gokei.val(gokei);
+
+        //合計
+        GetAll();
 
       }
 
       $('.js-calc-wrap input').on('change, input', function() {
         if ($(this).hasClass('js-calc-gokei')) {} else {
-
-          const $wrap = $(this).closest('.js-calc-wrap');
-          const $omosa_grape = $wrap.find('.js-calc-input2');
-          const $omosa_box = $wrap.find('.js-calc-input3');
-          const $omosa_only = $wrap.find('.js-calc-input4');
-          const $tanka = $wrap.find('.js-calc-input5');
-          const $gokei = $wrap.find('.js-calc-gokei');
-
-          //ぶどうだけの重さ
-          let omosa_grape_val = 0;
-          if ($omosa_grape.val()) {
-            omosa_grape_val = new Decimal($omosa_grape.val());
-          } else {
-            omosa_grape_val = new Decimal(0);
-          }
-          let omosa_box_val = 0;
-          if ($omosa_box.val()) {
-            omosa_box_val = new Decimal($omosa_box.val());
-          } else {
-            omosa_box_val = new Decimal(0);
-          }
-
-          let omosa_only = omosa_grape_val.sub(omosa_box_val).toNumber();
-          $omosa_only.html(omosa_only);
-
-          //金額
-          let gokei = omosa_only * $tanka.val();
-          gokei = Math.floor(gokei);
-          $gokei.val(gokei);
-
-          //合計
-          GetAll();
+          SetValue($(this));
         }
-
       })
 
       $('.js-calc-gokei').on('change, input', function() {
         GetAll();
       });
+     
 
     });
   </script>
