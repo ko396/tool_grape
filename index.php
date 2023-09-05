@@ -89,7 +89,7 @@
 
     <form data-persist="garlic" method="POST">
 
-      <?php for ($i = 0; $i < 10; $i++) {
+      <?php for ($i = 0; $i < 14; $i++) {
 
         $name = "";
         if ($i == 0) {
